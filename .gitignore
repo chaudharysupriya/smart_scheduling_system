@@ -1,0 +1,59 @@
+# ── Virtual environments ──────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── Python cache ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# ── Distribution / packaging ──────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+
+# ── Environment / secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*
+
+# ── Business settings (contains SMTP credentials and hashed password) ─────────
+business_settings.json
+
+# ── Streamlit secrets ─────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Auto-generated runtime data files ────────────────────────────────────────
+# new_bookings.csv is created automatically on the first customer booking
+data/new_bookings.csv
+# published_schedule.json is created when the owner publishes a schedule
+data/published_schedule.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / editor files ────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Jupyter notebooks (if used for exploration) ───────────────────────────────
+.ipynb_checkpoints/
+
+# ── pytest / coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
