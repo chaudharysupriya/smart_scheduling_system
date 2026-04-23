@@ -9,6 +9,7 @@ A data-driven scheduling tool built with Python and Streamlit for solo service b
 - **Demand Analysis Dashboard** — interactive heatmap showing booking frequency by day and time slot, with cancellation rates and lead times on hover
 - **Slot Quality Scoring Algorithm** — scores every day and time combination using a weighted formula covering demand frequency, customer diversity, cancellation reliability, and no-show rate
 - **Schedule Recommendation Generator** — produces an intelligent weekly schedule template for any target month based on historical demand patterns
+- **Capacity Constraint and Buffer Slot Protection** — automatically blocks the slot immediately following a long-duration appointment (average service ≥ 90 minutes), inserting a mandatory 15-minute gap to prevent back-to-back overruns; blocked slots are shown as **Buffer** on the schedule grid and are not bookable by customers
 - **Fixed vs Behaviour-Based Schedule Comparison** — side-by-side performance comparison of a static always-open schedule against the intelligent demand-driven schedule
 - **Simulation Engine** — runs synthetic booking requests through both scheduling models over configurable weeks and produces reproducible performance metrics
 - **Customer Booking Portal** — public-facing page where customers can view available slots for the published month and book appointments
@@ -215,6 +216,21 @@ The customer booking page will immediately show the available slots for that mon
 ## How the System Works
 
 The system uses **same-period historical comparison**, meaning when planning for March it only analyses past March data across all recorded years — not all months combined. This preserves seasonal patterns that would otherwise be diluted. Each day and time slot is scored using a weighted formula: `score = (demand frequency × 0.40) + (customer diversity × 0.25) + (reliability × 0.20) + (attendance × 0.15)`, where reliability penalises high cancellation rates and attendance penalises no-shows. Slots scoring above 0.65 are classified as recommended (green), 0.40 to 0.65 as marginal (amber), and below 0.40 as not recommended (red). Recency weighting gives the most recent year a weight of 0.6 and all earlier years a combined weight of 0.4, so newer customer behaviour has greater influence on recommendations than older data.
+
+**Amber slot rule:** amber-classified slots are only opened on high-demand days (Friday and Saturday). On all other days they remain marginal and are excluded from the published schedule, preventing over-supply on quieter days.
+
+**Buffer slot protection:** when the historical average service duration at a given time slot reaches or exceeds 90 minutes, the system automatically marks the immediately following slot as `buffered`. Buffered slots are blocked from customer booking and displayed in blue on the schedule grid. This guarantees a minimum 15-minute preparation gap between appointments and prevents the schedule from over-committing the owner's time.
+
+**UK bank holiday detection:** public holidays for England are calculated algorithmically (Easter is derived using the Anonymous Gregorian algorithm; all other holidays use fixed or floating Monday rules). No external API or file is required. Holidays within the target month are flagged on the schedule grid as an informational marker; the owner decides whether to close those days manually using the override checkboxes before publishing.
+
+**Schedule grid colour key:**
+
+| Colour | Status | Meaning |
+|--------|--------|---------|
+| Green | Open | Slot is open and available for customer booking |
+| Amber | Marginal | Amber-scored slot; open on Friday/Saturday only |
+| Blue | Buffer | Blocked gap after a long service — not bookable |
+| Grey | Closed | Outside working hours or manually closed |
 
 ---
 
